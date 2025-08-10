@@ -61,6 +61,8 @@ app/
 └── ThirdParty/
     └── Swift/
         └── ORM/
+            ├── LICENSE
+            ├── README.md
             ├── examples/
             │   ├── AdvancedQueries.php
             │   ├── BasicUsage.php

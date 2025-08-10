@@ -621,6 +621,7 @@ If generators aren't working:
 3. Ensure proper permissions for file creation
 4. Use `--force` to overwrite existing files
 5. Check `app/Config/Commands.php` registration
+6. Ensure foreign key constraints are configured to improve relationship discovery
 
 ## Contributing
 

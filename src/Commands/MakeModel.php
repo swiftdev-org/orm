@@ -28,9 +28,18 @@ class MakeModel extends BaseCommand
     protected $db;
     protected array $tableCache = [];
 
+    public function init()
+    {
+        if (!$this->db) {
+            $this->db = Database::connect();
+            helper('inflector');
+        }
+        return $this;
+    }
+
     public function run(array $params)
     {
-        $this->db = Database::connect();
+        $this->init();
 
         if (array_key_exists('all', $params)) {
             $this->generateAllModels($params);
@@ -97,17 +106,17 @@ class MakeModel extends BaseCommand
                 $entityName = $this->modelNameToEntityName($name, $suffix);
                 $entityNamespace = str_replace('Models', 'Entities', $namespace);
 
-                $entityCommand = new MakeEntity();
+                $entityCommand = new MakeEntity($this->logger,$this->commands);
                 $entityParams = [
                     'namespace' => $entityNamespace,
-                    'table' => $tableName,
+                    'table'     => $tableName,
                 ];
 
                 if ($force) {
                     $entityParams['force'] = true;
                 }
 
-                $entityCommand->generateSingleEntity($entityName, $entityParams);
+                $entityCommand->init()->generateSingleEntity($entityName, $entityParams);
             }
         }
     }
@@ -294,13 +303,13 @@ class MakeModel extends BaseCommand
         $baseName = $this->modelNameToEntityName($modelName, $suffix);
 
         // Convert to snake_case and pluralize
-        return $this->pluralize(strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $baseName)));
+        return plural(strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $baseName)));
     }
 
     protected function tableToModelName(string $tableName, string $suffix = ''): string
     {
         // Convert to PascalCase and singularize
-        $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->singularize($tableName))));
+        $modelName = str_replace(' ', '', ucwords(str_replace('_', ' ', singular($tableName))));
 
         // Add suffix if specified
         if (!empty($suffix)) {
@@ -313,7 +322,7 @@ class MakeModel extends BaseCommand
     protected function tableToEntityName(string $tableName): string
     {
         // Convert to PascalCase and singularize (no suffix for entities)
-        return str_replace(' ', '', ucwords(str_replace('_', ' ', $this->singularize($tableName))));
+        return str_replace(' ', '', ucwords(str_replace('_', ' ', singular($tableName))));
     }
 
     // Helper methods for database analysis
@@ -364,18 +373,18 @@ class MakeModel extends BaseCommand
     {
         $tables = $this->getAllTables();
         $pivotTables = [];
-        $currentTableSingular = $this->singularize($tableName);
+        $currentTableSingular = singular($tableName);
 
         foreach ($tables as $table) {
             // Check if table name suggests it's a pivot table
             if (strpos($table, '_') !== false) {
                 $parts = explode('_', $table);
                 if (count($parts) === 2) {
-                    $table1 = $this->singularize($parts[0]);
-                    $table2 = $this->singularize($parts[1]);
+                    $table1 = singular($parts[0]);
+                    $table2 = singular($parts[1]);
 
                     if ($table1 === $currentTableSingular) {
-                        $relatedTable = $this->pluralize($table2);
+                        $relatedTable = plural($table2);
                         if ($this->tableExists($relatedTable)) {
                             $pivotTables[] = [
                                 'pivot_table' => $table,
@@ -385,7 +394,7 @@ class MakeModel extends BaseCommand
                             ];
                         }
                     } elseif ($table2 === $currentTableSingular) {
-                        $relatedTable = $this->pluralize($table1);
+                        $relatedTable = plural($table1);
                         if ($this->tableExists($relatedTable)) {
                             $pivotTables[] = [
                                 'pivot_table' => $table,
@@ -468,36 +477,6 @@ class MakeModel extends BaseCommand
         return array_values($indexes);
     }
 
-    // String helper methods
-    protected function singularize(string $word): string
-    {
-        // Simple singularization
-        if (str_ends_with($word, 'ies')) {
-            return substr($word, 0, -3) . 'y';
-        }
-        if (str_ends_with($word, 'es')) {
-            return substr($word, 0, -2);
-        }
-        if (str_ends_with($word, 's') && !str_ends_with($word, 'ss')) {
-            return substr($word, 0, -1);
-        }
-
-        return $word;
-    }
-
-    protected function pluralize(string $word): string
-    {
-        // Simple pluralization
-        if (str_ends_with($word, 'y')) {
-            return substr($word, 0, -1) . 'ies';
-        }
-        if (str_ends_with($word, ['s', 'sh', 'ch', 'x', 'z'])) {
-            return $word . 'es';
-        }
-
-        return $word . 's';
-    }
-
     protected function foreignKeyToRelationName(string $foreignKey): string
     {
         // Convert user_id to user
@@ -506,8 +485,8 @@ class MakeModel extends BaseCommand
 
     protected function tableToRelationName(string $tableName, bool $plural = false): string
     {
-        $name = $this->singularize($tableName);
-        return $plural ? $this->pluralize($name) : $name;
+        $name = singular($tableName);
+        return $plural ? plural($name) : $name;
     }
 
     // Template and generation methods

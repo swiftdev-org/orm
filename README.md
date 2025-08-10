@@ -6,9 +6,9 @@ A powerful ORM extension for CodeIgniter 4 that brings Laravel Eloquent-like fun
 
 - 🚀 **Eloquent-style syntax** - Familiar API for Laravel developers
 - 🔗 **Relationship mapping** - HasOne, HasMany, BelongsTo, BelongsToMany
-- ⚡ **Eager loading** - Solve N+1 query problems with `with()`
 - 📊 **Relationship counting** - Count relationships without loading data using `withCount()`
 - 🏗️ **Nested relationships** - Load deep relationship trees
+- ⚡ **Eager loading** - Solve N+1 query problems with `with()`
 - 🎯 **Lazy loading** - Load relationships on-demand
 - 🔧 **Convention over configuration** - Automatic foreign key resolution
 - 📈 **Performance optimized** - Efficient query building and caching
@@ -54,33 +54,32 @@ Create the following directory structure in your CodeIgniter 4 project:
 
 ```
 app/
+├── Entities/
+│   └── (Generated entities will go here)
+├── Models/
+│   └── (Generated models will go here)app/
 └── ThirdParty/
     └── Swift/
         └── ORM/
+            ├── examples/
+            │   ├── AdvancedQueries.php
+            │   ├── BasicUsage.php
+            │   ├── PerformanceExamples.php
+            │   └── RelationshipExamples.php
             └── src/
                 ├── Entity.php
                 ├── Model.php
-                ├── Relations/
-                │   ├── Relation.php
-                │   ├── HasOne.php
-                │   ├── HasMany.php
-                │   ├── BelongsTo.php
-                │   └── BelongsToMany.php
                 ├── Commands/
-                │   ├── MakeModel.php
                 │   ├── MakeEntity.php
-                │   └── Config/
-                │       └── Commands.php
-                └── examples/
-                    ├── BasicUsage.php
-                    ├── RelationshipExamples.php
-                    ├── AdvancedQueries.php
-                    └── PerformanceExamples.php
-app/
-├── Entities/
-│   └── (Generated entities will go here)
-└── Models/
-    └── (Generated models will go here)
+                │   └── MakeModel.php
+                ├── Config/
+                │   └── Commands.php
+                └── Relations/
+                    ├── BelongsTo.php
+                    ├── BelongsToMany.php
+                    ├── HasMany.php
+                    ├── HasOne.php
+                    └── Relation.php
 ```
 
 #### 2. Copy Files

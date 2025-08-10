@@ -48,16 +48,15 @@ foreach ($users as $user) {
 
 ### Option 1: Manual Installation (Recommended for Development)
 
-#### 1. File Structure
-
-Create the following directory structure in your CodeIgniter 4 project:
+#### 1. Extract Files
+Extract Swift ORM files to your CodeIgniter 4 project:
 
 ```
 app/
 ├── Entities/
-│   └── (Generated entities will go here)
+│   └── (Generated entities will go here by default)
 ├── Models/
-│   └── (Generated models will go here)app/
+│   └── (Generated models will go here by default)
 └── ThirdParty/
     └── Swift/
         └── ORM/
@@ -84,16 +83,7 @@ app/
                     └── Relation.php
 ```
 
-#### 2. Copy Files
-
-Copy all the provided PHP files to their respective directories:
-
-1. **Core ORM Files** → `app/ThirdParty/Swift/ORM/src/`
-2. **Relation Files** → `app/ThirdParty/Swift/ORM/src/Relations/`
-3. **Command Files** → `app/ThirdParty/Swift/ORM/src/Commands/`
-4. **Example Files** → `app/ThirdParty/Swift/ORM/examples/`
-
-#### 3. Autoloading
+#### 2. Update Autoloader Config
 
 Add the namespace to your `app/Config/Autoload.php`:
 
@@ -116,86 +106,13 @@ class Autoload extends AutoloadConfig
 }
 ```
 
-#### 4. Register Commands
-
-Add to your `app/Config/Commands.php`:
-
-```php
-<?php
-
-namespace Config;
-
-use CodeIgniter\Config\BaseConfig;
-
-class Commands extends BaseConfig
-{
-    public $commands = [
-        'make:model'  => \Swift\ORM\Commands\MakeModel::class,
-        'make:entity' => \Swift\ORM\Commands\MakeEntity::class,
-    ];
-}
-```
-
 ### Option 2: Composer Package Installation
 
 ```bash
 # This will be available when published as a package
-composer require swift/orm
+composer require swiftdev-org/orm
 ```
 
-#### Add to composer.json autoloading:
-```json
-{
-    "autoload": {
-        "psr-4": {
-            "App\\": "app/",
-            "Swift\\ORM\\": "vendor/swift/orm/src/"
-        }
-    }
-}
-```
-
-Then run:
-```bash
-composer dump-autoload
-```
-
-### 3. Database Setup
-
-Run the provided SQL schema to create the database tables:
-
-```bash
-mysql -u your_username -p your_database < database_schema.sql
-```
-
-Or create migrations based on the provided schema.
-
-### 4. Configure Database
-
-Ensure your `app/Config/Database.php` is properly configured:
-
-```php
-public array $default = [
-    'DSN'          => '',
-    'hostname'     => 'localhost',
-    'username'     => 'your_username',
-    'password'     => 'your_password',
-    'database'     => 'your_database',
-    'DBDriver'     => 'MySQLi',
-    'DBPrefix'     => '',
-    'pConnect'     => false,
-    'DBDebug'      => true, // Set to false in production
-    'charset'      => 'utf8mb4',
-    'DBCollat'     => 'utf8mb4_unicode_ci',
-    'swapPre'      => '',
-    'encrypt'      => false,
-    'compress'     => false,
-    'strictOn'     => false,
-    'failover'     => [],
-    'port'         => 3306,
-    'numberNative' => false,
-];
-```
 
 ## Quick Start
 

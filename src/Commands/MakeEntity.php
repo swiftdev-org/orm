@@ -353,13 +353,13 @@ class MakeEntity extends BaseCommand
         $db = $this->db->database;
         $query = "
             SELECT
-                COLUMN_NAME as column_name,
-                REFERENCED_TABLE_NAME as referenced_table,
-                REFERENCED_COLUMN_NAME as referenced_column
-            FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-            WHERE TABLE_SCHEMA = ?
-            AND TABLE_NAME = ?
-            AND REFERENCED_TABLE_NAME IS NOT NULL
+                `COLUMN_NAME` as `column_name`,
+                `REFERENCED_TABLE_NAME` as `referenced_table`,
+                `REFERENCED_COLUMN_NAME` as `referenced_column`
+            FROM `INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE`
+            WHERE `TABLE_SCHEMA` = ?
+            AND `TABLE_NAME` = ?
+            AND `REFERENCED_TABLE_NAME` IS NOT NULL
         ";
 
         return $this->db->query($query, [$db, $tableName])->getResultArray();
@@ -370,12 +370,12 @@ class MakeEntity extends BaseCommand
         $db = $this->db->database;
         $query = "
             SELECT
-                TABLE_NAME as `table`,
-                COLUMN_NAME as `column`,
-                REFERENCED_COLUMN_NAME as referenced_column
-            FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-            WHERE TABLE_SCHEMA = ?
-            AND REFERENCED_TABLE_NAME = ?
+                `TABLE_NAME` as `table`,
+                `COLUMN_NAME` as `column`,
+                `REFERENCED_COLUMN_NAME` as `referenced_column`
+            FROM `INFORMATION_SCHEMA`.`KEY_COLUMN_USAGE`
+            WHERE `TABLE_SCHEMA` = ?
+            AND `REFERENCED_TABLE_NAME` = ?
         ";
 
         return $this->db->query($query, [$db, $tableName])->getResultArray();

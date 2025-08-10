@@ -1,4 +1,4 @@
-# CodeIgniter 4 Eloquent-Style ORM Extension
+# Eloquent-Style ORM Extension for CodeIgniter 4
 
 A powerful ORM extension for CodeIgniter 4 that brings Laravel Eloquent-like functionality to your CI4 applications, including relationship mapping, eager loading, and lazy loading.
 

@@ -170,6 +170,23 @@ class Entity extends CodeIgniterEntity
         // Get base array from parent
         $array = parent::toArray($onlyChanged, $cast, false);
 
+        // Fix objects that don't have toArray() method (like Time objects)
+        if ($cast) {
+            foreach ($array as $key => $value) {
+                if (is_object($value) && !method_exists($value, 'toArray')) {
+                    if (method_exists($value, '__toString')) {
+                        $array[$key] = (string) $value;
+                    } elseif (isset($this->attributes[$key])) {
+                        $array[$key] = $this->attributes[$key];
+                    } elseif (isset($this->original[$Key]) && !$onlyChanged) {
+                        $array[$key] = $this->original[$key];
+                    } else {
+                        unset($array[$key]);
+                    }
+                }
+            }
+        }
+
         // Add loaded relations if recursive is true
         if ($recursive) {
             foreach ($this->loaded_relations as $relationName => $relationData) {

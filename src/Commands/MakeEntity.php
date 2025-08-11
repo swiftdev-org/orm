@@ -524,6 +524,8 @@ class MakeEntity extends BaseCommand
             } elseif (is_string($value) && !str_starts_with($value, "'")) {
                 $items[] = "        '{$key}' => '{$value}'";
             } else {
+                // Remove duplicate quotes around string
+                $value = preg_replace("/(^''|''$)/","'",$value);
                 $items[] = "        '{$key}' => {$value}";
             }
         }

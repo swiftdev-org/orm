@@ -11,7 +11,7 @@ abstract class Relation
     protected Model $query;
     protected Entity $parent;
     protected string $related;
-    protected static bool $constraints = true;
+    static bool $constraints = true;
 
     public function __construct(Model $query, Entity $parent, string $related)
     {

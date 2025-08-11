@@ -47,7 +47,7 @@ class Model extends CodeIgniterModel
     /**
      * Override findAll to support eager loading
      */
-    public function findAll(int $limit = 0, int $offset = 0)
+    public function findAll(?int $limit = 0, int $offset = 0)
     {
         $results = parent::findAll($limit, $offset);
 
